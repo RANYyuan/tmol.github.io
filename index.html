@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>RANY'S · 创作链接</title>
+    <title>RANY'S · 艺术入口</title>
     <style>
         * {
             margin: 0;
@@ -13,9 +13,9 @@
 
         body {
             background: #000000;
-            font-family: 'Inter', 'Helvetica Neue', 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            font-weight: 400;
-            color: #ffffff;
+            font-family: 'Inter', 'Helvetica Neue', 'SF Pro Text', 'PingFang SC', 'Microsoft YaHei', serif;
+            font-weight: 300;
+            color: #eeeeee;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -24,7 +24,7 @@
             overflow-x: hidden;
         }
 
-        /* 极简星辰背景 (保留氛围) */
+        /* 极简星辰背景 (极其微弱的颗粒) */
         #stardust {
             position: fixed;
             top: 0;
@@ -33,41 +33,43 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
-            opacity: 0.3;
+            opacity: 0.25;
         }
 
-        /* 主容器 */
+        /* 主容器 — 呼吸感 */
         .container {
             position: relative;
             z-index: 2;
-            max-width: 680px;
+            max-width: 700px;
             width: 90%;
             text-align: center;
             padding: 2rem 1rem;
         }
 
-        /* 主标题 */
+        /* 主标题 — 极细，字距大，无彩色 */
         .main-title {
-            font-size: clamp(3rem, 12vw, 6rem);
-            font-weight: 800;
-            letter-spacing: 0.05em;
-            color: #ff3333;
-            text-shadow: 0 0 10px rgba(255,51,51,0.4);
-            margin-bottom: 0.5rem;
+            font-size: clamp(3rem, 12vw, 5.6rem);
+            font-weight: 200;
+            letter-spacing: 0.12em;
+            color: #ffffff;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            opacity: 0.92;
         }
 
-        /* 副标题或签名 */
-        .sub {
-            font-size: 0.8rem;
-            letter-spacing: 0.2em;
-            color: #aaaaaa;
+        /* 可选的优雅小副线 */
+        .sub-line {
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            color: #999;
             margin-bottom: 3rem;
-            border-bottom: 1px solid rgba(255,51,51,0.3);
             display: inline-block;
-            padding-bottom: 0.5rem;
+            border-bottom: 0.5px solid #444;
+            padding-bottom: 0.6rem;
         }
 
-        /* 按钮网格 */
+        /* 按钮组 — 白/灰调，线条感 */
         .links-grid {
             display: flex;
             flex-direction: column;
@@ -76,53 +78,58 @@
             margin: 2rem 0;
         }
 
-        /* 每个按钮的样式 — 极简红边 */
         .link-btn {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
-            background: transparent;
-            border: 1px solid #ff3333;
-            color: #ff3333;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(2px);
+            border: 0.5px solid rgba(255, 255, 255, 0.25);
+            color: #cccccc;
             padding: 0.9rem 1rem;
             text-decoration: none;
-            font-size: 1.1rem;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            transition: all 0.25s ease;
-            cursor: pointer;
-            backdrop-filter: blur(4px);
-            border-radius: 0px;  /* 直角，保持硬朗 */
+            font-size: 1rem;
+            font-weight: 300;
+            letter-spacing: 0.12em;
+            transition: all 0.3s ease;
+            font-family: inherit;
         }
 
         .link-btn:hover {
-            background: #ff3333;
-            color: #000000;
-            box-shadow: 0 0 12px rgba(255,51,51,0.5);
-            transform: scale(1.01);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.6);
+            color: #ffffff;
+            transform: translateY(-2px);
         }
 
-        /* 图标样式 (简单emoji或文字图标，你也可以换成图片) */
+        /* 图标采用极简emoji或线条感字符 */
         .btn-icon {
-            font-size: 1.4rem;
-            filter: drop-shadow(0 0 2px currentColor);
+            font-size: 1.2rem;
+            filter: none;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .link-btn:hover .btn-icon {
+            opacity: 1;
         }
 
-        /* 底部 */
-        .footer-note {
+        /* 底部留白诗句 */
+        .footer-poem {
             font-size: 0.65rem;
             color: #555;
-            margin-top: 3rem;
-            border-top: 0.5px solid #222;
+            margin-top: 3.5rem;
+            border-top: 0.5px solid #2a2a2a;
             display: inline-block;
             padding-top: 1rem;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.12em;
+            font-weight: 200;
         }
 
-        @media (max-width: 500px) {
-            .link-btn { font-size: 0.9rem; padding: 0.7rem; }
-            .btn-icon { font-size: 1.2rem; }
+        @media (max-width: 540px) {
+            .link-btn { font-size: 0.85rem; padding: 0.7rem; }
+            .btn-icon { font-size: 1rem; }
+            .main-title { letter-spacing: 0.08em; }
         }
     </style>
 </head>
@@ -132,35 +139,35 @@
 
 <div class="container">
     <div class="main-title">RANY'S</div>
-    <div class="sub">/ 创 作 聚 合 点</div>
+    <div class="sub-line">/ 静 止 的 入 口</div>
 
     <div class="links-grid">
-        <!-- 小红书按钮 -->
+        <!-- 小红书 -->
         <a href="https://www.xiaohongshu.com/user/profile/5e2944230000000001004d1b?xsec_token=ABZ4lCUwmh9kwkZkRPC4thIXMLGIjpm1-PTes-KxICFjE=&xsec_source=pc_search" target="_blank" rel="noopener noreferrer" class="link-btn">
-            <span class="btn-icon">📕</span> 小红书 · 日常创作
+            <span class="btn-icon">📕</span> 小红书 · 日常絮语
         </a>
 
-        <!-- B站按钮 -->
+        <!-- B站 -->
         <a href="https://space.bilibili.com/3691012985719349?spm_id_from=333.337.0.0" target="_blank" rel="noopener noreferrer" class="link-btn">
-            <span class="btn-icon">🎬</span> Bilibili · 视频记录
+            <span class="btn-icon">🎬</span> Bilibili · 影像散记
         </a>
 
-        <!-- 公众号文章（作品集入口） -->
+        <!-- 公众号作品集 -->
         <a href="https://mp.weixin.qq.com/s/d-Ll5hf9ey4P7LjsfaKZTw" target="_blank" rel="noopener noreferrer" class="link-btn">
             <span class="btn-icon">📖</span> 公众号 · 《A little book of Rany》
         </a>
 
         <!-- 淘宝店铺 -->
         <a href="https://shop61204986.taobao.com/shop/view_shop.htm?appUid=RAzN8HWKS5NnEeNmPggqeRvL3oNyn3WNmzhxV6vnfBjNebVyG8h&spm=a21n57.1.hoverItem.1" target="_blank" rel="noopener noreferrer" class="link-btn">
-            <span class="btn-icon">🛒</span> 淘宝 · TMOL STUDIO
+            <span class="btn-icon">🛋️</span> 淘宝 · TMOL 造物所
         </a>
     </div>
 
-    <div class="footer-note">✦ 点击跳转 · 感谢每一次相遇 ✦</div>
+    <div class="footer-poem">✦ 每个入口 都是一次安静的创作 ✦</div>
 </div>
 
 <script>
-    // ---------- 极简星辰背景（保留原有效果，极淡）----------
+    // ---------- 极简星辰背景（极淡，缓慢流动）----------
     const canvas = document.getElementById('stardust');
     const ctx = canvas.getContext('2d');
     let width = window.innerWidth;
@@ -177,12 +184,13 @@
 
     function initStars() {
         stars = [];
-        for (let i = 0; i < 120; i++) {
+        // 更少的星星，更微弱
+        for (let i = 0; i < 90; i++) {
             stars.push({
                 x: Math.random() * width,
                 y: Math.random() * height,
-                radius: Math.random() * 1.5 + 0.5,
-                alpha: Math.random() * 0.3 + 0.1,
+                radius: Math.random() * 1.2 + 0.3,
+                alpha: Math.random() * 0.25 + 0.05,
                 vx: (Math.random() - 0.5) * 0.02,
                 vy: (Math.random() - 0.5) * 0.01
             });
@@ -193,7 +201,7 @@
         for (let s of stars) {
             ctx.beginPath();
             ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 220, 180, ${s.alpha})`;
+            ctx.fillStyle = `rgba(220, 220, 200, ${s.alpha})`;
             ctx.fill();
             s.x += s.vx;
             s.y += s.vy;
