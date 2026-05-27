@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>TRUE MEANING OF LIFE </title>
+    <title>TRUE MEANING OF LIFE · 极简艺术版</title>
     <style>
         * {
             margin: 0;
@@ -45,7 +45,7 @@
             padding: 3rem 1rem;
         }
 
-        /* 主标题 — 轻盈，字距，无炫光 */
+        /* 主标题 — 轻盈，字距，无炫光 (保留原有样式，内部span控制变色) */
         .main-title {
             font-size: clamp(2.2rem, 8vw, 4.2rem);
             font-weight: 300;
@@ -54,6 +54,16 @@
             margin-bottom: 2.5rem;
             text-transform: uppercase;
             opacity: 0.92;
+            white-space: nowrap;      /* 强制一行 */
+        }
+        /* 每个字母的基础颜色 (继承父级) */
+        .main-title .char {
+            color: inherit;
+            transition: color 0.2s ease;
+        }
+        /* 高亮红色 */
+        .main-title .char.active {
+            color: #ff3333;
         }
 
         /* 地球旅行年数 — 干净，细线点缀 */
@@ -165,7 +175,7 @@
 <canvas id="stardust"></canvas>
 
 <div class="container">
-    <div class="main-title">TRUE MEANING OF LIFE</div>
+    <div class="main-title" id="mainTitle"></div>
 
     <div class="years-block">
         <div class="years-label">EARTH JOURNEY</div>
@@ -200,7 +210,78 @@
 </div>
 
 <script>
-    // 出生时间：1989年10月24日 23:30:00 (月份 9 代表十月)
+    // ---------- 跑马灯效果：依次高亮每个字母为红色 ----------
+    const titleStr = "TRUE MEANING OF LIFE";
+    const titleElement = document.getElementById('mainTitle');
+    // 将标题拆分为字母数组（保留空格，但空格不参与高亮）
+    // 我们生成 span.char 只包裹字母，空格直接输出为普通空格（不变色）
+    let charElements = [];   // 存储字母对应的span元素（按顺序）
+    let spacesPositions = []; // 记录每个空格的位置索引（用于跳过）
+    
+    function buildTitle() {
+        titleElement.innerHTML = ''; // 清空
+        let letterIndex = 0; // 仅对字母计数
+        for (let i = 0; i < titleStr.length; i++) {
+            const ch = titleStr[i];
+            if (ch === ' ') {
+                // 空格：直接插入普通空格，不包裹span
+                titleElement.appendChild(document.createTextNode(' '));
+                // 记录此处不是字母
+                continue;
+            }
+            // 字母（包括标点？这里只有字母和空格，所有非空格字符都视为字母）
+            const span = document.createElement('span');
+            span.className = 'char';
+            span.textContent = ch;
+            span.style.color = '#f0f0f0'; // 默认颜色
+            titleElement.appendChild(span);
+            charElements.push(span);
+        }
+    }
+    
+    buildTitle();
+    
+    let currentIndex = 0;
+    let intervalId = null;
+    
+    function startMarquee() {
+        if (intervalId) clearInterval(intervalId);
+        // 初始全部设为默认颜色
+        charElements.forEach(el => {
+            el.classList.remove('active');
+            el.style.color = '#f0f0f0';
+        });
+        currentIndex = 0;
+        if (charElements.length === 0) return;
+        // 高亮第一个字母
+        charElements[currentIndex].classList.add('active');
+        charElements[currentIndex].style.color = '#ff3333';
+        
+        intervalId = setInterval(() => {
+            // 移除当前高亮
+            charElements[currentIndex].classList.remove('active');
+            charElements[currentIndex].style.color = '#f0f0f0';
+            // 移动到下一个
+            currentIndex = (currentIndex + 1) % charElements.length;
+            // 高亮新字母
+            charElements[currentIndex].classList.add('active');
+            charElements[currentIndex].style.color = '#ff3333';
+        }, 300); // 0.3秒换一个字母，速度适中
+    }
+    
+    startMarquee();
+    
+    // 可选：页面可见性变化时暂停恢复（提升性能）
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            if (intervalId) clearInterval(intervalId);
+            intervalId = null;
+        } else {
+            startMarquee();
+        }
+    });
+    
+    // ---------- 时间计算 ----------
     const birthDate = new Date(1989, 9, 24, 23, 30, 0);
 
     function getTimeStats(now, birth) {
@@ -209,7 +290,6 @@
         const totalMinutes = Math.floor(totalSeconds / 60);
         const totalHours = Math.floor(totalMinutes / 60);
         const totalDays = Math.floor(totalHours / 24);
-        // 年份计算（精确到生日）
         let years = now.getFullYear() - birth.getFullYear();
         const monthDiff = now.getMonth() - birth.getMonth();
         if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < birth.getDate())) {
@@ -230,7 +310,10 @@
 
     updateDisplay();
     setInterval(updateDisplay, 1000);
-    document.getElementById('refreshBtn').addEventListener('click', updateDisplay);
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+        updateDisplay();
+        // 刷新时重置跑马灯也无妨，但可以保持连续，不做额外重置
+    });
 
     // ---------- 极简星辰背景（极少粒子，缓慢游动）----------
     const canvas = document.getElementById('stardust');
@@ -249,7 +332,6 @@
 
     function initStars() {
         stars = [];
-        // 极简主义：只有 80 颗星，非常微光
         for (let i = 0; i < 80; i++) {
             stars.push({
                 x: Math.random() * width,
@@ -280,7 +362,6 @@
     function animateStars() {
         if (!ctx) return;
         ctx.clearRect(0, 0, width, height);
-        // 纯黑背景
         ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, width, height);
         drawStars();
