@@ -55,24 +55,13 @@
             text-transform: uppercase;
             opacity: 0.92;
             white-space: nowrap;      /* 强制一行 */
-            display: inline-block;
-            width: 100%;
-            overflow-x: auto;
-            overflow-y: visible;
         }
-        /* 每个字母的基础样式 */
+        /* 每个字母的基础颜色 (继承父级) */
         .main-title .char {
-            display: inline-block;      /* 让transform生效 */
-            transition: transform 0.15s cubic-bezier(0.2, 1, 0.3, 1), color 0.2s ease;
             color: inherit;
-            cursor: default;
+            transition: color 0.2s ease;
         }
-        /* 鼠标悬停时：向上弹跳 + 轻微放大 + 变红色 */
-        .main-title .char:hover {
-            transform: translateY(-6px) scale(1.1);
-            color: #ff3333 !important;  /* 临时覆盖跑马灯颜色 */
-        }
-        /* 跑马灯高亮时的颜色（与悬停红色一致，但悬停优先级更高） */
+        /* 高亮红色 */
         .main-title .char.active {
             color: #ff3333;
         }
@@ -217,28 +206,34 @@
 
     <div class="birth-meta">1989.10.24 / 23:30:00</div>
     <button class="refresh-btn" id="refreshBtn">SYNC</button>
-    <footer>hover on letters · 每个字都会跳一下</footer>
+    <footer>every second holds meaning</footer>
 </div>
 
 <script>
     // ---------- 跑马灯效果：依次高亮每个字母为红色 ----------
     const titleStr = "TRUE MEANING OF LIFE";
     const titleElement = document.getElementById('mainTitle');
-    let charElements = [];   // 存储字母对应的span元素
+    // 将标题拆分为字母数组（保留空格，但空格不参与高亮）
+    // 我们生成 span.char 只包裹字母，空格直接输出为普通空格（不变色）
+    let charElements = [];   // 存储字母对应的span元素（按顺序）
+    let spacesPositions = []; // 记录每个空格的位置索引（用于跳过）
     
     function buildTitle() {
-        titleElement.innerHTML = '';
+        titleElement.innerHTML = ''; // 清空
+        let letterIndex = 0; // 仅对字母计数
         for (let i = 0; i < titleStr.length; i++) {
             const ch = titleStr[i];
             if (ch === ' ') {
-                // 空格：直接插入普通空格
+                // 空格：直接插入普通空格，不包裹span
                 titleElement.appendChild(document.createTextNode(' '));
+                // 记录此处不是字母
                 continue;
             }
+            // 字母（包括标点？这里只有字母和空格，所有非空格字符都视为字母）
             const span = document.createElement('span');
             span.className = 'char';
             span.textContent = ch;
-            span.style.color = '#f0f0f0';
+            span.style.color = '#f0f0f0'; // 默认颜色
             titleElement.appendChild(span);
             charElements.push(span);
         }
@@ -251,13 +246,14 @@
     
     function startMarquee() {
         if (intervalId) clearInterval(intervalId);
-        // 重置所有字母颜色为默认白色
+        // 初始全部设为默认颜色
         charElements.forEach(el => {
             el.classList.remove('active');
             el.style.color = '#f0f0f0';
         });
         currentIndex = 0;
         if (charElements.length === 0) return;
+        // 高亮第一个字母
         charElements[currentIndex].classList.add('active');
         charElements[currentIndex].style.color = '#ff3333';
         
@@ -270,12 +266,12 @@
             // 高亮新字母
             charElements[currentIndex].classList.add('active');
             charElements[currentIndex].style.color = '#ff3333';
-        }, 300);
+        }, 300); // 0.3秒换一个字母，速度适中
     }
     
     startMarquee();
     
-    // 页面可见性变化时暂停恢复
+    // 可选：页面可见性变化时暂停恢复（提升性能）
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
             if (intervalId) clearInterval(intervalId);
@@ -314,7 +310,10 @@
 
     updateDisplay();
     setInterval(updateDisplay, 1000);
-    document.getElementById('refreshBtn').addEventListener('click', updateDisplay);
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+        updateDisplay();
+        // 刷新时重置跑马灯也无妨，但可以保持连续，不做额外重置
+    });
 
     // ---------- 极简星辰背景（极少粒子，缓慢游动）----------
     const canvas = document.getElementById('stardust');
