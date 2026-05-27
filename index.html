@@ -1,11 +1,357 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>tmol.fun - 我的个人网站</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>🎂 我来地球多少年 | tmol.fun</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #1a2a3a 0%, #0f1a24 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Poppins', 'Quicksand', system-ui, -apple-system, sans-serif;
+            padding: 1.5rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 装饰小星星 (动态闪烁) */
+        body::before {
+            content: "✨";
+            position: absolute;
+            top: 10%;
+            left: 5%;
+            font-size: 2rem;
+            opacity: 0.6;
+            animation: floatStar 8s infinite ease-in-out;
+            pointer-events: none;
+        }
+        body::after {
+            content: "⭐";
+            position: absolute;
+            bottom: 12%;
+            right: 6%;
+            font-size: 2.2rem;
+            opacity: 0.5;
+            animation: floatStar 12s infinite reverse;
+            pointer-events: none;
+        }
+        @keyframes floatStar {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        /* 主卡片 */
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border-radius: 64px;
+            padding: 2rem 2rem 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 900px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            font-size: 2.6rem;
+            text-align: center;
+            color: #ffecb3;
+            letter-spacing: 2px;
+            word-break: keep-all;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        h1 span {
+            background: linear-gradient(135deg, #f9d976, #f39f86);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        .sub {
+            text-align: center;
+            color: #cddde9;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px dashed rgba(255, 215, 150, 0.4);
+            display: inline-block;
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        .timer-container {
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 48px;
+            padding: 1.2rem 1rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .time-digits {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(120deg, #FFE6B0, #FFB347);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 4px;
+            word-break: break-word;
+            line-height: 1.2;
+        }
+
+        .time-unit {
+            font-size: 1.1rem;
+            color: #FFE0A3;
+            margin: 0 0.2rem;
+            font-weight: 500;
+        }
+
+        .extra-stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .stat-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.8rem 1.2rem;
+            border-radius: 60px;
+            text-align: center;
+            backdrop-filter: blur(4px);
+            flex: 1 1 auto;
+            min-width: 130px;
+        }
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #FCCF7C;
+            font-family: monospace;
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: #B9D0E0;
+            letter-spacing: 1px;
+        }
+
+        .birth-badge {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.9rem;
+            background: rgba(255,215,150,0.15);
+            border-radius: 40px;
+            padding: 0.6rem 1rem;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            color: #ecd9b4;
+        }
+
+        button {
+            margin-top: 1.2rem;
+            background: #ff9a5e;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: #2c2c2c;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+        button:hover {
+            background: #ffbd87;
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 1.2rem;
+            }
+            .time-digits {
+                font-size: 1.7rem;
+                letter-spacing: 2px;
+            }
+            h1 {
+                font-size: 1.9rem;
+            }
+            .stat-number {
+                font-size: 1.3rem;
+            }
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            opacity: 0.6;
+            color: #c0d0e0;
+        }
+    </style>
 </head>
 <body>
-    <h1>欢迎来到 tmol.fun 🎉</h1>
-    <p>这是我的个人网站，目前还在建设中，以后会变得更有趣～</p>
+
+<div class="card">
+    <h1>
+        🌍 我来地球 
+        <span id="yearsOnEarth">0</span> 年
+    </h1>
+    <div style="text-align: center;">
+        <div class="sub">✨ 实时记录我的地球旅行 ✨</div>
+    </div>
+
+    <div class="timer-container">
+        <div class="time-digits" id="fullTimer">
+            0年 0月 0天 0小时 0分钟 0秒
+        </div>
+    </div>
+
+    <div class="extra-stats">
+        <div class="stat-card">
+            <div class="stat-number" id="totalDays">0</div>
+            <div class="stat-label">🌞 总天数</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="totalHours">0</div>
+            <div class="stat-label">⏱️ 总小时</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="totalMinutes">0</div>
+            <div class="stat-label">💖 总分钟</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="totalSeconds">0</div>
+            <div class="stat-label">✨ 总秒数</div>
+        </div>
+    </div>
+
+    <div class="birth-badge">
+        🎂 出生时刻：1989年10月24日 11:00:00
+    </div>
+
+    <div style="display: flex; justify-content: center;">
+        <button id="refreshBtn">🔄 刷新 / 同步心跳</button>
+    </div>
+    <footer>
+        每秒都在长大 🌱 感恩每一刻
+    </footer>
+</div>
+
+<script>
+    // 出生时间：1989年10月24日 11:00:00 (注意月份是 9，因为JS中月份从0开始)
+    const birthDate = new Date(1989, 9, 24, 11, 0, 0);  
+
+    // 补零函数
+    function padZero(num) {
+        return num < 10 ? '0' + num : '' + num;
+    }
+
+    // 计算精确的 年/月/天/时/分/秒 差额（考虑到实际日历）
+    function getDetailedAge(now, birth) {
+        let years = now.getFullYear() - birth.getFullYear();
+        let months = now.getMonth() - birth.getMonth();
+        let days = now.getDate() - birth.getDate();
+        let hours = now.getHours() - birth.getHours();
+        let minutes = now.getMinutes() - birth.getMinutes();
+        let seconds = now.getSeconds() - birth.getSeconds();
+
+        // 处理负值：借位
+        if (seconds < 0) {
+            seconds += 60;
+            minutes--;
+        }
+        if (minutes < 0) {
+            minutes += 60;
+            hours--;
+        }
+        if (hours < 0) {
+            hours += 24;
+            days--;
+        }
+        if (days < 0) {
+            // 计算上个月的天数
+            const prevMonthDate = new Date(now.getFullYear(), now.getMonth(), 0);
+            const daysInPrevMonth = prevMonthDate.getDate();
+            days += daysInPrevMonth;
+            months--;
+        }
+        if (months < 0) {
+            months += 12;
+            years--;
+        }
+
+        return { years, months, days, hours, minutes, seconds };
+    }
+
+    // 计算总天数（精确到毫秒，用于展示总量）
+    function getTotalStats(now, birth) {
+        const diffMs = now - birth;
+        const totalSeconds = Math.floor(diffMs / 1000);
+        const totalMinutes = Math.floor(totalSeconds / 60);
+        const totalHours = Math.floor(totalMinutes / 60);
+        const totalDays = Math.floor(totalHours / 24);
+        return {
+            totalDays: totalDays,
+            totalHours: totalHours,
+            totalMinutes: totalMinutes,
+            totalSeconds: totalSeconds
+        };
+    }
+
+    function updateTimer() {
+        const now = new Date();
+        const age = getDetailedAge(now, birthDate);
+        const totals = getTotalStats(now, birthDate);
+
+        // 更新主标题的年份
+        document.getElementById('yearsOnEarth').innerText = age.years;
+
+        // 更新完整倒计时/计时字符串
+        const timerStr = `${age.years}年 ${age.months}月 ${age.days}天 ${padZero(age.hours)}小时 ${padZero(age.minutes)}分钟 ${padZero(age.seconds)}秒`;
+        document.getElementById('fullTimer').innerText = timerStr;
+
+        // 更新统计卡片
+        document.getElementById('totalDays').innerText = totals.totalDays.toLocaleString();
+        document.getElementById('totalHours').innerText = totals.totalHours.toLocaleString();
+        document.getElementById('totalMinutes').innerText = totals.totalMinutes.toLocaleString();
+        document.getElementById('totalSeconds').innerText = totals.totalSeconds.toLocaleString();
+    }
+
+    // 立即更新
+    updateTimer();
+    // 每秒更新
+    const interval = setInterval(updateTimer, 1000);
+
+    // 刷新按钮 (重新同步时间)
+    const btn = document.getElementById('refreshBtn');
+    btn.addEventListener('click', () => {
+        updateTimer();
+        // 可选: 小小反馈
+        btn.style.transform = 'scale(0.96)';
+        setTimeout(() => { btn.style.transform = ''; }, 150);
+    });
+
+    // 页面关闭时清除定时器（可选好习惯）
+    window.addEventListener('beforeunload', () => {
+        clearInterval(interval);
+    });
+</script>
 </body>
 </html>
