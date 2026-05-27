@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>TRUE MEANING OF LIFE </title>
+    <title>TRUE MEANING OF LIFE · 线构红与黑</title>
     <style>
         * {
             margin: 0;
@@ -26,10 +26,10 @@
         /* 主容器 — 极窄留白，线框结构 */
         .container {
             width: 90%;
-            max-width: 900px;
+            max-width: 800px;
             text-align: center;
             padding: 2rem 1rem;
-            border: 1px solid #ff3333;
+            border: 1px solid #ff3333;      /* 红色外框线 */
             box-shadow: 0 0 0 1px rgba(255,51,51,0.2);
             background: #000000;
         }
@@ -42,26 +42,15 @@
             margin: 0 auto 1.5rem auto;
         }
 
-        /* 主标题 — 强制一行不换行，响应式缩放 */
+        /* 主标题 */
         .main-title {
-            font-size: clamp(1.2rem, 6vw, 2.8rem);
+            font-size: clamp(1.6rem, 6vw, 2.8rem);
             font-weight: 300;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.15em;
             color: #ffffff;
             text-transform: uppercase;
             margin-bottom: 1.5rem;
-            white-space: nowrap;      /* 关键：禁止换行 */
-            overflow-x: auto;
-            overflow-y: hidden;
-            -webkit-overflow-scrolling: touch;
-            /* 如果实在溢出，允许水平滚动（但基本不会） */
-        }
-        /* 优雅处理极端小屏：允许滚动，但不换行 */
-        @media (max-width: 480px) {
-            .main-title {
-                font-size: 1rem;
-                letter-spacing: 0.08em;
-            }
+            word-break: keep-all;
         }
 
         /* 下方短红线 */
@@ -87,7 +76,7 @@
             font-size: 3.2rem;
             font-weight: 400;
             font-family: 'SF Mono', 'Inter', monospace;
-            color: #ff5555;
+            color: #ff5555;       /* 红色数字 */
             letter-spacing: 0.05em;
             display: inline-block;
             border-bottom: 1px solid #ff3333;
@@ -119,7 +108,7 @@
             font-size: 2rem;
             font-weight: 400;
             font-family: 'SF Mono', 'Inter', monospace;
-            color: #ff8888;
+            color: #ff8888;      /* 淡红数字 */
             letter-spacing: 0.02em;
         }
         .stat-label {
@@ -228,6 +217,7 @@
         const totalMinutes = Math.floor(totalSeconds / 60);
         const totalHours = Math.floor(totalMinutes / 60);
         const totalDays = Math.floor(totalHours / 24);
+        // 年份精确到生日
         let years = now.getFullYear() - birth.getFullYear();
         const monthDiff = now.getMonth() - birth.getMonth();
         if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < birth.getDate())) {
