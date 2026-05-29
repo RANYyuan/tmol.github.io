@@ -758,7 +758,7 @@ h3 {
   margin: 0;
   overflow: hidden;
   border: 6px solid rgba(255, 255, 255, 0.88);
-  border-radius: 999px;
+  border-radius: 28px;
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.18), transparent 44%),
     var(--panel-strong);
@@ -869,21 +869,56 @@ h3 {
 @media (max-width: 580px) {
   .resume-card {
     aspect-ratio: auto;
-    border-radius: 34px;
-    padding: 30px;
+    min-height: auto;
+    border-radius: 28px;
+    padding: 24px;
+  }
+
+  .resume-card h3 {
+    font-size: 42px;
+  }
+
+  .resume-card p:not(.eyebrow) {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .software-cloud {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
   }
 
   .software-cloud span {
-    width: 92px;
+    width: auto;
+    min-height: 58px;
+    aspect-ratio: auto;
+    border-radius: 18px;
+    padding: 8px;
+    font-size: 12px;
   }
 
   .photo-wall {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 142px;
+    gap: 10px;
   }
 
   .hobby-photo {
-    min-height: 220px;
+    grid-column: auto;
+    grid-row: auto;
+    min-height: 0;
+    border-width: 4px;
+    border-radius: 20px;
+  }
+
+  .hobby-photo span {
+    min-width: 58px;
+    min-height: 58px;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 13px;
   }
 }
 
