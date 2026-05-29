@@ -247,11 +247,19 @@ h3 {
   box-shadow: 0 24px 52px rgba(0, 0, 0, 0.3);
   transition: scale 180ms ease, filter 180ms ease;
   animation: bubbleIn 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both, floaty 5.6s ease-in-out infinite;
+  touch-action: none;
+  will-change: transform;
 }
 
 .orbit-bubble:active {
   cursor: grabbing;
   scale: 1.04;
+}
+
+.orbit-bubble.is-dragging {
+  animation: none;
+  transition: none;
+  filter: brightness(1.06);
 }
 
 .orbit-bubble:hover {
@@ -608,6 +616,8 @@ h3 {
 
   .orbit-bubble {
     width: 104px;
+    animation: bubbleIn 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.26);
   }
 
   .round-section,
@@ -1157,13 +1167,20 @@ bubbles.forEach((bubble) => {
   let pointerId = null;
   let startX = 0;
   let startY = 0;
+  let grabOffsetX = 0;
+  let grabOffsetY = 0;
+  let rafId = null;
   let moved = false;
 
   bubble.addEventListener("pointerdown", (event) => {
+    const rect = bubble.getBoundingClientRect();
     pointerId = event.pointerId;
     startX = event.clientX;
     startY = event.clientY;
+    grabOffsetX = event.clientX - (rect.left + rect.width / 2);
+    grabOffsetY = event.clientY - (rect.top + rect.height / 2);
     moved = false;
+    bubble.classList.add("is-dragging");
     bubble.setPointerCapture(pointerId);
   });
 
@@ -1172,14 +1189,16 @@ bubbles.forEach((bubble) => {
       return;
     }
 
+    event.preventDefault();
+
     const bounds = stage.getBoundingClientRect();
     const size = bubble.getBoundingClientRect().width;
     const minX = size / 2;
     const maxX = bounds.width - size / 2;
     const minY = size / 2;
     const maxY = bounds.height - size / 2;
-    const x = Math.min(Math.max(event.clientX - bounds.left, minX), maxX);
-    const y = Math.min(Math.max(event.clientY - bounds.top, minY), maxY);
+    const x = Math.min(Math.max(event.clientX - bounds.left - grabOffsetX, minX), maxX);
+    const y = Math.min(Math.max(event.clientY - bounds.top - grabOffsetY, minY), maxY);
 
     if (Math.abs(event.clientX - startX) > 4 || Math.abs(event.clientY - startY) > 4) {
       moved = true;
@@ -1189,15 +1208,32 @@ bubbles.forEach((bubble) => {
     bubble.dataset.x = String((x / bounds.width) * 100);
     bubble.dataset.y = String((y / bounds.height) * 100);
     bubble.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
-    drawLines();
+
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+    }
+
+    rafId = requestAnimationFrame(() => {
+      drawLines();
+      rafId = null;
+    });
   });
 
   bubble.addEventListener("pointerup", (event) => {
     if (pointerId === event.pointerId) {
       pointerId = null;
+      bubble.classList.remove("is-dragging");
       if (!moved) {
         bubble.dataset.dragged = "false";
       }
+    }
+  });
+
+  bubble.addEventListener("pointercancel", (event) => {
+    if (pointerId === event.pointerId) {
+      pointerId = null;
+      bubble.classList.remove("is-dragging");
+      bubble.dataset.dragged = "false";
     }
   });
 });
